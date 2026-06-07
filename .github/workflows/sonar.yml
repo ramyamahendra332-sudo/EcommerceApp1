@@ -23,5 +23,5 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=YOUR_PROJECT_KEY
-            -Dsonar.organization=YOUR_ORG_NAME
+            -Dsonar.projectKey=EcommerceApp1
+            -Dsonar.organization=ramya
