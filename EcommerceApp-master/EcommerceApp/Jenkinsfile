@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Repository Check') {
+            steps {
+                echo 'GitHub connected successfully'
+            }
+        }
+
+        stage('Show Files') {
+            steps {
+                bat 'dir'
+            }
+        }
+
+        stage('Pipeline Test') {
+            steps {
+                echo 'CI/CD Pipeline is working'
+            }
+        }
+    }
+}
