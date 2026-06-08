@@ -22,12 +22,15 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # IMPORTANT STEP (THIS FIXES YOUR ERROR)
+      # IMPORTANT: move into correct folder
       - name: Build Maven project
+        working-directory: EcommerceApp-master/EcommerceApp
         run: mvn clean compile package
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v8.1.0
+        with:
+          projectBaseDir: EcommerceApp-master/EcommerceApp
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
