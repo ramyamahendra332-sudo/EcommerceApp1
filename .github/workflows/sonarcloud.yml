@@ -1,29 +1,33 @@
 name: SonarCloud Scan
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-  sonar:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          fetch-depth: 0
+          distribution: temurin
+          java-version: 17
+
+      - name: Build with Maven
+        run: mvn clean compile
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v8.1.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_ORGANIZATION: ramyamahendra332-sudo
+          SONAR_PROJECT_KEY: EcommerceApp1
         with:
           args: >
-            -Dsonar.projectKey=ramyamahendra332-sudo_EcommerceApp1
-            -Dsonar.organization=ramyamahendra332-sudo
-            -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.sources=.
-            -Dsonar.java.binaries=NONE
-            -Dsonar.language=
+            -Dsonar.java.binaries=target/classes
