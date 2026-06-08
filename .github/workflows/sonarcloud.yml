@@ -1,4 +1,4 @@
-name: SonarCloud
+name: SonarCloud Scan
 
 on:
   workflow_dispatch:
@@ -31,3 +31,4 @@ jobs:
             -Dsonar.organization=ramyamahendra332-sudo
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.exclusions=**/*.java
+            -Dsonar.sourceEncoding=UTF-8
