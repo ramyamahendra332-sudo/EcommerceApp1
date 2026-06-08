@@ -1,69 +1,53 @@
 pipeline {
-agent any
+    agent any
 
-```
-tools {
-    nodejs 'NodeJS'
-}
-
-environment {
-    SONAR_TOKEN = credentials('sonar-token')
-}
-
-stages {
-
-    stage('Checkout Code') {
-        steps {
-            git branch: 'main',
-            url: 'https://github.com/ramyamahendra332-sudo/EcommerceApp1.git'
-        }
+    tools {
+        jdk 'JDK17'
+        maven 'Maven3'
     }
 
-    stage('Install Dependencies') {
-        steps {
-            bat 'npm install'
-        }
+    environment {
+        SONAR_TOKEN = credentials('sonar-token')
     }
 
-    stage('Build Application') {
-        steps {
-            bat 'npm run build'
-        }
-    }
+    stages {
 
-    stage('SonarQube Analysis') {
-        steps {
-            withSonarQubeEnv('SonarQube') {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/ramyamahendra332-sudo/EcommerceApp1.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'mvn clean package'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    bat 'mvn sonar:sonar -Dsonar.token=%SONAR_TOKEN%'
+                }
+            }
+        }
+
+        stage('Deploy to Tomcat') {
+            steps {
                 bat '''
-                sonar-scanner ^
-                -Dsonar.projectKey=EcommerceApp1 ^
-                -Dsonar.sources=src ^
-                -Dsonar.login=%SONAR_TOKEN%
+                copy target\\*.war "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\"
                 '''
             }
         }
     }
 
-    stage('Deploy to Tomcat') {
-        steps {
-            bat '''
-            rmdir /s /q "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT"
-            xcopy build "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\" /E /I /Y
-            '''
+    post {
+        success {
+            echo 'Build and Deployment Successful'
+        }
+        failure {
+            echo 'Build Failed'
         }
     }
-}
-
-post {
-    success {
-        echo 'Build Successful'
-        echo 'Application Deployed to Tomcat'
-    }
-
-    failure {
-        echo 'Build Failed'
-    }
-}
-```
-
 }
