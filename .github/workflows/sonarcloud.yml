@@ -1,5 +1,7 @@
 name: SonarCloud
+
 on:
+  workflow_dispatch:   # 👈 MANUAL RUN BUTTON
   push:
     branches: [ "main" ]
   pull_request:
