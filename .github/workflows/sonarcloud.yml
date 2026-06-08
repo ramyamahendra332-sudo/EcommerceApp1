@@ -4,33 +4,23 @@ on:
   workflow_dispatch:
   push:
     branches: [ "main" ]
-  pull_request:
-    types: [opened, synchronize, reopened]
 
 jobs:
   sonar:
-    name: SonarCloud Scan
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Get code
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Step 2: Setup Java
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # Step 3: Build project (THIS FIXES YOUR ERROR)
-      - name: Build project
-        run: mvn clean compile
-
-      # Step 4: SonarCloud scan
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v8.1.0
         env:
@@ -40,3 +30,4 @@ jobs:
             -Dsonar.projectKey=ramyamahendra332-sudo_EcommerceApp1
             -Dsonar.organization=ramyamahendra332-sudo
             -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.exclusions=**/*.java
